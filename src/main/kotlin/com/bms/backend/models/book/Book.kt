@@ -32,6 +32,13 @@ class Book constructor(
     @Column(length=1024)
     val description: String?;
 
+    @OneToOne(
+            cascade = [CascadeType.ALL],
+            fetch = FetchType.LAZY
+    )
+    @JoinColumn(name="book_id")
+    lateinit var bookMetadata: BookMetadata;
+
     init {
         this.cover = cover;
         this.title = title;

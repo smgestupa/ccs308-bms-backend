@@ -1,7 +1,6 @@
 package com.bms.backend.controllers.v1
 
 import com.bms.backend.models.book.Book
-import com.bms.backend.models.book.BookComplete
 import com.bms.backend.payloads.response.MessageResponse
 import jep.Interpreter
 import jep.NDArray
@@ -63,7 +62,7 @@ class BooksController {
     )
     @Throws(Exception::class)
     @ResponseBody
-    fun insertBookRecord(@RequestBody book: BookComplete): ResponseEntity<Any> {
+    fun insertBookRecord(@RequestBody book: Book): ResponseEntity<Any> {
         var status: HttpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
 
         return ResponseEntity(

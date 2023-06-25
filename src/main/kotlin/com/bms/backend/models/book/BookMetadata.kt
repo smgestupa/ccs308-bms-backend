@@ -51,13 +51,6 @@ class BookMetadata constructor(
     @Column(length=64)
     val isbn13: String?;
 
-    @OneToOne(
-            cascade = [ CascadeType.ALL ],
-            fetch = FetchType.LAZY,
-            mappedBy = "bookMetadata"
-    )
-    lateinit var bookComplete: BookComplete;
-
     init {
         this.coverType = coverType;
         this.pages = pages;
