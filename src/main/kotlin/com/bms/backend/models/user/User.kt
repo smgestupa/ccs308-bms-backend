@@ -1,5 +1,6 @@
 package com.bms.backend.models.user
 
+import com.bms.backend.models.book.BookMetadata
 import com.bms.backend.models.role.Role
 import javax.persistence.*
 
@@ -10,8 +11,6 @@ class User constructor(
     firstName: String,
     lastName: String,
     bio: String?,
-    username: String,
-    password: String,
     role: Set<Role>
 ) {
 
@@ -40,19 +39,14 @@ class User constructor(
     @Column(length=64)
     val bio: String?;
 
-    @Column(
-            length=32,
-            nullable=false
+    @OneToOne(
+            cascade = [CascadeType.ALL],
+            fetch = FetchType.LAZY
     )
-    val username: String;
+    @JoinColumn(name="user_id")
+    lateinit var userMetadata: UserMetadata;
 
-    @Column(
-            length=64,
-            nullable=false
-    )
-    val password: String;
-
-    @ManyToMany( fetch = FetchType.LAZY )
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             joinColumns = [JoinColumn(name="user_id")],
             inverseJoinColumns = [JoinColumn(name="role_id")]
@@ -64,8 +58,6 @@ class User constructor(
         this.firstName = firstName;
         this.lastName = lastName;
         this.bio = bio;
-        this.username = username;
-        this.password = password;
         this.role = role;
     }
 }
