@@ -6,9 +6,8 @@ import javax.persistence.*
 @Entity
 @Table(name="book_metadata")
 class BookMetadata constructor(
-    coverID: Int,
-    genreID: Int,
-    pages: Int,
+    coverType: String,
+    pages: Int = 0,
     publisher: String,
     publishDate: String,
     views: Int = 0,
@@ -22,16 +21,11 @@ class BookMetadata constructor(
     val bookID: Int = 0;
 
     @Column(
-            name="cover_id",
+            name="cover_type",
+            length=16,
             nullable=false
     )
-    val coverID: Int;
-
-    @Column(
-            name="genre_id",
-            nullable=false
-    )
-    val genreID: Int;
+    val coverType: String;
 
     @Column(nullable=false)
     val pages: Int;
@@ -65,8 +59,7 @@ class BookMetadata constructor(
     lateinit var bookComplete: BookComplete;
 
     init {
-        this.coverID = coverID;
-        this.genreID = genreID;
+        this.coverType = coverType;
         this.pages = pages;
         this.publisher = publisher;
         this.publishDate = publishDate;
