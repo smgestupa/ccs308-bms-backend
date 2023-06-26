@@ -6,10 +6,12 @@ import javax.persistence.*
 @Entity
 @Table
 class Book constructor(
-    cover: ByteArray?,
-    title: String,
-    author: String?,
-    description: String?
+        cover: ByteArray?,
+        title: String,
+        author: String?,
+        description: String?,
+        createdAt: String,
+        updatedAt: String
 ) {
 
     @Id
@@ -32,6 +34,12 @@ class Book constructor(
     @Column(length=1024)
     val description: String?;
 
+    @Column(name="created_at")
+    val createdAt: String;
+
+    @Column(name="updated_at")
+    val updatedAt: String;
+
     @OneToOne(
             cascade = [CascadeType.ALL],
             fetch = FetchType.LAZY
@@ -44,5 +52,7 @@ class Book constructor(
         this.title = title;
         this.author = author;
         this.description = description;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 }
