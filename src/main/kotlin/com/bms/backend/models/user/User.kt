@@ -39,13 +39,6 @@ class User constructor(
     @Column(length=64)
     val bio: String?;
 
-    @OneToOne(
-            cascade = [CascadeType.ALL],
-            fetch = FetchType.LAZY
-    )
-    @JoinColumn(name="user_id")
-    lateinit var userMetadata: UserMetadata;
-
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             joinColumns = [JoinColumn(name="user_id")],

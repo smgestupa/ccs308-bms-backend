@@ -14,7 +14,6 @@ class UserMetadata constructor(
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     val userID: Int = 0;
 
-
     @Column(
             length=64,
             nullable=false
@@ -26,6 +25,13 @@ class UserMetadata constructor(
             nullable=false
     )
     val password: String;
+
+    @OneToOne(
+            cascade = [CascadeType.ALL],
+            fetch = FetchType.LAZY
+    )
+    @JoinColumn(name="user_id")
+    lateinit var user: User;
 
     init {
         this.username = username;
