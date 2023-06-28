@@ -17,7 +17,7 @@ class BookMetadata constructor(
 
     @Id
     @Column(name="book_id")
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy=GenerationType.AUTO)
     val bookID: Int = 0;
 
     @Column(

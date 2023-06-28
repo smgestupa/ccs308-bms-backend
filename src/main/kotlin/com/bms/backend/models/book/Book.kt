@@ -1,6 +1,8 @@
 package com.bms.backend.models.book
 
 import com.fasterxml.jackson.annotation.JsonManagedReference
+import org.hibernate.annotations.CreationTimestamp
+import java.time.LocalDateTime
 import javax.persistence.*
 
 @Entity
@@ -9,14 +11,12 @@ class Book constructor(
         cover: ByteArray?,
         title: String,
         author: String?,
-        description: String?,
-        createdAt: String,
-        updatedAt: String
+        description: String?
 ) {
 
     @Id
     @Column(name="book_id")
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy=GenerationType.AUTO)
     val bookID: Int = 0;
 
     @Column
@@ -35,10 +35,12 @@ class Book constructor(
     val description: String?;
 
     @Column(name="created_at")
-    val createdAt: String;
+    @CreationTimestamp
+    lateinit var createdAt: LocalDateTime;
 
     @Column(name="updated_at")
-    val updatedAt: String;
+    @CreationTimestamp
+    lateinit var updatedAt: LocalDateTime;
 
     @OneToOne(
             cascade = [CascadeType.ALL],
@@ -52,7 +54,5 @@ class Book constructor(
         this.title = title;
         this.author = author;
         this.description = description;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
     }
 }
