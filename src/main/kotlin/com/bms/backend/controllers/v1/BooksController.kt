@@ -1,20 +1,26 @@
 package com.bms.backend.controllers.v1
 
 import com.bms.backend.models.book.Book
+import com.bms.backend.models.book.BookMetadata
 import com.bms.backend.payloads.response.MessageResponse
+import com.bms.backend.repositories.BookRepository
 import jep.Interpreter
 import jep.NDArray
 import jep.SharedInterpreter
 import kotlinx.coroutines.runBlocking
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
+import java.io.File
 
 @CrossOrigin(origins=["*"], maxAge=3600)
 @RestController
 @RequestMapping("/api/v1/books")
-class BooksController {
+class BooksController @Autowired constructor (
+    private val bookRepository: BookRepository
+) {
 
     @PostMapping(
             value=["/get/{id}"],
@@ -80,7 +86,7 @@ class BooksController {
     @ResponseBody
     fun classifyBookCover(@RequestBody bookCover: MultipartFile): ResponseEntity<Any> {
         var status: HttpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-        var coverType: String? = null;
+        var coverType: String = "";
 
         runBlocking {
             SharedInterpreter().use {
@@ -94,11 +100,11 @@ class BooksController {
             }
         }
 
-        if (!coverType.isNullOrBlank()) {
+        if (coverType.isNotEmpty()) {
             status = HttpStatus.OK;
 
             return ResponseEntity(
-                    MessageResponse(coverType!!, status.value()),
+                    MessageResponse(coverType, status.value()),
                     status
             );
         }
