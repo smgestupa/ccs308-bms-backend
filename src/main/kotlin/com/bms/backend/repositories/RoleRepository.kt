@@ -9,5 +9,5 @@ import java.util.*
 @Repository
 interface RoleRepository : JpaRepository<Role, Int> {
 
-    fun findByLabel(label: EnumRole): Optional<Role>;
+    fun findByType(label: EnumRole): Optional<Role>;
 }
