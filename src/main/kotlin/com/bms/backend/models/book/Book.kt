@@ -34,6 +34,9 @@ class Book constructor(
     @Column(length=1024)
     val description: String?;
 
+    @Column(nullable=false)
+    var published: Boolean = true;
+
     @Column(name="created_at")
     @CreationTimestamp
     lateinit var createdAt: LocalDateTime;
