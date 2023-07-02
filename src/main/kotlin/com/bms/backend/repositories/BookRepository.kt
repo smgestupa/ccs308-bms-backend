@@ -13,14 +13,6 @@ import javax.transaction.Transactional
 @Repository
 interface BookRepository : JpaRepository<Book, Int> {
 
-    @Modifying
-    @Transactional
-    @Query(
-        value="INSERT IGNORE INTO book_genre VALUES (:bookID, :type)",
-        nativeQuery=true
-    )
-    fun addBookGenre(@Param("bookID") bookID: Int, @Param("type") type: String);
-
     @Query(
             value="SELECT * FROM favourite_book f JOIN books b USING (book_id) WHERE user_code = :userID",
             nativeQuery=true
@@ -44,4 +36,22 @@ interface BookRepository : JpaRepository<Book, Int> {
             nativeQuery=true
     )
     fun removeFavouriteBook(@Param("userID") userID: Int, @Param("bookID") bookID: Int): List<Book>;
+
+    @Modifying
+    @Transactional
+    @Query(
+        value="INSERT IGNORE INTO user_history (user_id, book_id, action) VALUES (:userID, :bookID, :action)",
+        nativeQuery=true
+    )
+    fun addUserBookHistory(@Param("userID") userID: Int, @Param("bookID") bookID: Int, @Param("action") action: String);
+
+
+    @Modifying
+    @Transactional
+    @Query(
+        value="INSERT IGNORE INTO book_genre VALUES (:bookID, :type)",
+        nativeQuery=true
+    )
+    fun addBookGenre(@Param("bookID") bookID: Int, @Param("type") type: String);
+
 }
