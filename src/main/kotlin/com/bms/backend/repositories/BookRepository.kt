@@ -1,14 +1,25 @@
 package com.bms.backend.repositories
 
 import com.bms.backend.models.book.Book
+import com.bms.backend.models.book.BookMetadata
 import net.bytebuddy.build.Plugin.Engine.Summary
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
+import javax.transaction.Transactional
 
 @Repository
 interface BookRepository : JpaRepository<Book, Int> {
+
+    @Modifying
+    @Transactional
+    @Query(
+        value="INSERT IGNORE INTO book_genre VALUES (:bookID, :type)",
+        nativeQuery=true
+    )
+    fun addBookGenre(@Param("bookID") bookID: Int, @Param("type") type: String);
 
     @Query(
             value="SELECT * FROM favourite_book f JOIN books b USING (book_id) WHERE user_code = :userID",
