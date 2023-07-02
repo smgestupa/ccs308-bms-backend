@@ -1,63 +1,63 @@
 package com.bms.backend.models.book
 
-import com.fasterxml.jackson.annotation.JsonManagedReference
 import javax.persistence.*
 
 @Entity
 @Table(name="book_metadata")
-class BookMetadata constructor(
-    coverType: String,
-    pages: Int = 0,
-    publisher: String,
-    publishDate: String,
-    views: Int = 0,
-    isbn10: String? = null,
-    isbn13: String? = null
-) {
-
+data class BookMetadata(
     @Id
     @Column(name="book_id")
-    @GeneratedValue(strategy=GenerationType.AUTO)
-    val bookID: Int = 0;
-
-    @Column(
-            name="cover_type",
-            length=16,
-            nullable=false
-    )
-    val coverType: String;
-
-    @Column(nullable=false)
-    val pages: Int;
+    val bookID: Int = 0,
 
     @Column(
         length=128,
         nullable=false
     )
-    val publisher: String;
+    val title: String,
+
+    @Column(
+        name="cover_type",
+        length=16,
+        nullable=false
+    )
+    val coverType: String,
+
+    @Column(nullable=false)
+    val pages: Int = 0,
+
+    @Column(
+        length=128,
+        nullable=false
+    )
+    val publisher: String,
 
     @Column(
         length=16,
         nullable=false
     )
-    val publishDate: String;
+    val publishDate: String,
+
+
+    val views: Int = 0,
 
     @Column(nullable=false)
-    val views: Int;
+    val isbn10: String? = null,
 
     @Column(length=64)
-    val isbn10: String?;
+    val isbn13: String? = null,
 
-    @Column(length=64)
-    val isbn13: String?;
+    @Column
+    val fantasy: Int = 0,
 
-    init {
-        this.coverType = coverType;
-        this.pages = pages;
-        this.publisher = publisher;
-        this.publishDate = publishDate;
-        this.views = views;
-        this.isbn10 = isbn10;
-        this.isbn13 = isbn13;
-    }
-}
+    @Column
+    val horror: Int = 0,
+
+    @Column
+    val adventure: Int = 0,
+
+    @Column
+    val romance: Int = 0,
+
+    @Column
+    val mystery: Int = 0
+)
