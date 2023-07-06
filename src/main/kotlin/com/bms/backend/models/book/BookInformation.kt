@@ -53,6 +53,18 @@ data class BookInformation(
     val published: Int = 0,
 
     @Column
+    val aesthetic: Int = 0,
+
+    @Column
+    val dark: Int = 0,
+
+    @Column
+    val nature: Int = 0,
+
+    @Column
+    val plain: Int = 0,
+
+    @Column
     val fantasy: Int = 0,
 
     @Column
