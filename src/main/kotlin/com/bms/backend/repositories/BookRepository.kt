@@ -14,6 +14,12 @@ import javax.transaction.Transactional
 interface BookRepository : JpaRepository<Book, Int> {
 
     @Query(
+        value = "SELECT type FROM book_genre WHERE book_id = :bookID",
+        nativeQuery = true
+    )
+    fun getBookGenre(@Param("bookID") bookID: Int): List<String>;
+
+    @Query(
             value="SELECT * FROM favourite_book f JOIN books b USING (book_id) WHERE user_code = :userID",
             nativeQuery=true
     )
