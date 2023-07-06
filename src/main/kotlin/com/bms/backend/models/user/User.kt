@@ -16,7 +16,7 @@ class User constructor(
 
     @Id
     @Column(name="user_id")
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy=GenerationType.AUTO)
     val userID: Int = 0;
 
     @Column
@@ -45,6 +45,13 @@ class User constructor(
             inverseJoinColumns = [JoinColumn(name="role_id")]
     )
     var role: Set<Role> = HashSet();
+
+    @OneToOne(
+        cascade = [CascadeType.ALL],
+        fetch = FetchType.LAZY
+    )
+    @JoinColumn(name="user_id")
+    lateinit var userMetadata: UserMetadata;
 
     init {
         this.photo = photo;
