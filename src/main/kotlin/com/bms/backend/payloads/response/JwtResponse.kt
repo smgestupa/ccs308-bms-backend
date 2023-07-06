@@ -3,7 +3,6 @@ package com.bms.backend.payloads.response
 class JwtResponse constructor(
         token: String,
         userID: Int,
-        username: String,
         roles: List<String>
 ) {
 
