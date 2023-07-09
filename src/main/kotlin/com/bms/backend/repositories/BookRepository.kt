@@ -26,22 +26,26 @@ interface BookRepository : JpaRepository<Book, Int> {
     fun getFavouriteBooks(@Param("userID") userID: Int): List<Summary>;
 
     @Query(
-            value="SELECT EXISTS(SELECT * FROM favourite_book WHERE user_id = :userID AND book_id = :bookID",
+            value="SELECT EXISTS(SELECT * FROM favourite_book WHERE user_id = :userID AND book_id = :bookID)",
             nativeQuery=true
     )
     fun isFavouriteBook(@Param("userID") userID: Int, @Param("bookID") bookID: Int): Int;
 
+    @Modifying
+    @Transactional
     @Query(
-            value="INSERT IGNORE INTO favourite_book VALUES (:userID, :bookID)",
+            value="INSERT IGNORE INTO favourite_book (user_id, book_id) VALUES (:userID, :bookID)",
             nativeQuery=true
     )
     fun addFavouriteBook(@Param("userID") userID: Int, @Param("bookID") bookID: Int);
 
+    @Modifying
+    @Transactional
     @Query(
-            value="DELETE IGNORE FROM favourite_book WHERE user_id = :userID AND book_id = :bookID)",
+            value="DELETE IGNORE FROM favourite_book WHERE user_id = :userID AND book_id = :bookID",
             nativeQuery=true
     )
-    fun removeFavouriteBook(@Param("userID") userID: Int, @Param("bookID") bookID: Int): List<Book>;
+    fun removeFavouriteBook(@Param("userID") userID: Int, @Param("bookID") bookID: Int);
 
     @Modifying
     @Transactional
