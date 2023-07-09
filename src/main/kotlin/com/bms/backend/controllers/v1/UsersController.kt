@@ -4,9 +4,11 @@ import com.bms.backend.enums.EnumRole
 import com.bms.backend.models.role.Role
 import com.bms.backend.models.user.User
 import com.bms.backend.models.user.UserMetadata
+import com.bms.backend.models.user.UserProfile
 import com.bms.backend.payloads.requests.LoginRequest
 import com.bms.backend.payloads.requests.RegisterRequest
 import com.bms.backend.payloads.requests.UserProfileRequest
+import com.bms.backend.payloads.response.DataResponse
 import com.bms.backend.payloads.response.JwtResponse
 import com.bms.backend.payloads.response.MessageResponse
 import com.bms.backend.repositories.BookRepository
@@ -195,6 +197,41 @@ class UsersController @Autowired constructor(
             status
         )
     }
+
+    @GetMapping(
+            value = ["/profile/get"],
+            produces = ["application/json"]
+    )
+    @Throws(Exception::class)
+    fun getUserProfile(@RequestHeader userID: String): ResponseEntity<Any> {
+        var status: HttpStatus = HttpStatus.OK;
+
+        val optionalUser: Optional<User> = userRepository.findByUserID(Integer.parseInt(userID));
+
+        if (optionalUser.isEmpty) {
+            status = HttpStatus.NOT_FOUND;
+
+            return ResponseEntity(
+                    MessageResponse("Could not find user with the given ID", status.value()),
+                    status
+            );
+        }
+
+        val user: User = optionalUser.get();
+        val userProfile: UserProfile = UserProfile(
+                user.userID,
+                user.photo,
+                user.firstName,
+                user.lastName,
+                user.bio
+        );
+
+        return ResponseEntity(
+                DataResponse(userProfile, status.value()),
+                status
+        );
+    }
+
     @PostMapping(
         value=["/profile/edit"],
         consumes=["application/json"],
