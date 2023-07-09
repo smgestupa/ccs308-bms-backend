@@ -95,7 +95,7 @@ interface BookRepository : JpaRepository<Book, Int> {
     )
     fun addBookGenre(@Param("bookID") bookID: Int, @Param("type") type: String);
 
-    fun findByTitleContains(title: String): List<Book>;
+    fun findByTitleContainsAndPublishedEquals(title: String, published: Boolean): List<Book>;
     fun findByBookMetadataIsbn10(isbn10: String): List<Book>;
     fun findByBookMetadataIsbn13(isbn13: String): List<Book>;
 

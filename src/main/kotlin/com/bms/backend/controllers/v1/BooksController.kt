@@ -168,7 +168,7 @@ class BooksController @Autowired constructor (
         else if (formattedQuery.matches(Regex("^[\\d]{13}$")))
             books = bookRepository.findByBookMetadataIsbn13(formattedQuery);
         else
-            books = bookRepository.findByTitleContains(formattedQuery);
+            books = bookRepository.findByTitleContainsAndPublishedEquals(formattedQuery, true);
 
         if (books.isNotEmpty()) {
             status = HttpStatus.OK;
