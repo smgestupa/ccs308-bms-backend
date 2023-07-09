@@ -76,7 +76,7 @@ interface BookRepository : JpaRepository<Book, Int> {
             value="SELECT b.book_id, cover, title, author, description, published, b.created_at, b.updated_at FROM book b INNER JOIN book_metadata bm ON (b.book_id = bm.book_id) ORDER BY bm.views DESC LIMIT 7",
             nativeQuery=true
     )
-    fun listTrendingBooks(@Param("userID") userID: Int): List<Book>;
+    fun listTrendingBooks(): List<Book>;
 
     @Modifying
     @Transactional
