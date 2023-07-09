@@ -65,6 +65,7 @@ class BooksController @Autowired constructor (
                 status
         );
     }
+
     @GetMapping(
             value=["/favourite/{id}"],
             produces=["application/json"]
@@ -89,6 +90,35 @@ class BooksController @Autowired constructor (
                 status
         );
     }
+
+    @GetMapping(
+            value=["/favourite/search"],
+            produces=["application/json"]
+    )
+    @Throws(Exception::class)
+    suspend fun searchFavouriteBooks(@RequestParam(required = false) query: String?, @RequestHeader userID: String): ResponseEntity<Any> {
+        var status: HttpStatus = HttpStatus.OK;
+
+        var books: List<Book>;
+        if (query.isNullOrEmpty())
+            books = bookRepository.getFavouriteBooks(Integer.parseInt(userID));
+        else {
+            val formattedQuery: String = query.trim();
+
+            books = if (formattedQuery.matches(Regex("^[\\d]{10}$")))
+                bookRepository.getFavouriteBooksByIsbn10(Integer.parseInt(userID), formattedQuery);
+            else if (formattedQuery.matches(Regex("^[\\d]{13}$")))
+                bookRepository.getFavouriteBooksByIsbn13(Integer.parseInt(userID), formattedQuery);
+            else
+                bookRepository.getFavouriteBooksByTitle(Integer.parseInt(userID), formattedQuery);
+        }
+
+        return ResponseEntity(
+                DataResponse(books, status.value()),
+                status
+        );
+    }
+
     @GetMapping(
             value=["/search"],
             produces=["application/json"]
