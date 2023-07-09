@@ -27,17 +27,17 @@ class User constructor(
             length=64,
             nullable=false
     )
-    val firstName: String;
+    var firstName: String;
 
     @Column(
             name="last_name",
             length=64,
             nullable=false
     )
-    val lastName: String;
+    var lastName: String;
 
     @Column(length=64)
-    val bio: String?;
+    var bio: String?;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
