@@ -65,6 +65,38 @@ class BooksController @Autowired constructor (
                 status
         );
     }
+    @GetMapping(
+            value=["/search"],
+            produces=["application/json"]
+    )
+    @Throws(Exception::class)
+    suspend fun searchBookRecords(@RequestParam query: String): ResponseEntity<Any> {
+        var status: HttpStatus = HttpStatus.NOT_FOUND;
+
+        val formattedQuery = query.trim();
+
+        var books: List<Book> = emptyList();
+        if (formattedQuery.matches(Regex("^[\\d]{10}$")))
+            books = bookRepository.findByBookMetadataIsbn10(formattedQuery);
+        else if (formattedQuery.matches(Regex("^[\\d]{13}$")))
+            books = bookRepository.findByBookMetadataIsbn13(formattedQuery);
+        else
+            books = bookRepository.findByTitleContains(formattedQuery);
+
+        if (books.isNotEmpty()) {
+            status = HttpStatus.OK;
+
+            return ResponseEntity(
+                    DataResponse(books, status.value()),
+                    status
+            );
+        }
+
+        return ResponseEntity(
+                MessageResponse("No books found for recommendation", status.value()),
+                status
+        );
+    }
 
     @PostMapping(
             value=["/add"],
