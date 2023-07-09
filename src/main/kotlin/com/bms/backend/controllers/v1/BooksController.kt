@@ -534,4 +534,41 @@ class BooksController @Autowired constructor (
                 status
         );
     }
+    @PostMapping(
+            value=["/extract"],
+            consumes=["multipart/form-data"],
+            produces=["application/json"]
+    )
+    @Throws(Exception::class)
+    @ResponseBody
+    fun extractISBNCodes(@RequestBody uploadedImage: MultipartFile): ResponseEntity<Any> {
+        var status: HttpStatus = HttpStatus.NOT_FOUND;
+        var isbn: String = "";
+
+        runBlocking {
+            SharedInterpreter().use {
+                it.runScript("F:/Programming/Python/extract_isbn_codes/main.py");
+                it.set("img", NDArray(uploadedImage.bytes));
+                it.exec("isbnCode = extract_isbn_codes(img)");
+
+                val isbnCode: Any? = it.getValue("isbnCode");
+                if (isbnCode != null && isbnCode.toString().isNotEmpty())
+                    isbn = isbnCode.toString();
+            }
+        }
+
+        if (isbn.isNotEmpty()) {
+            status = HttpStatus.OK;
+
+            return ResponseEntity(
+                    DataResponse(isbn, status.value()),
+                    status
+            );
+        }
+
+        return ResponseEntity(
+                MessageResponse("No ISBN was detected from the image", status.value()),
+                status
+        );
+    }
 }
