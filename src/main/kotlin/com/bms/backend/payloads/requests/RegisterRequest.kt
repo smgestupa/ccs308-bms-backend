@@ -8,4 +8,5 @@ class RegisterRequest {
     lateinit var firstName: String;
     lateinit var lastName: String;
     lateinit var bio: String;
+    lateinit var genres: Set<String>;
 }
