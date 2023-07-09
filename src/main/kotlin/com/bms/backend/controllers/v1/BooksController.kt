@@ -92,11 +92,27 @@ class BooksController @Autowired constructor (
     }
 
     @GetMapping(
+            value=["/favourite/list"],
+            produces=["application/json"]
+    )
+    @Throws(Exception::class)
+    suspend fun listFavouriteBooks(@RequestHeader userID: String): ResponseEntity<Any> {
+        var status: HttpStatus = HttpStatus.OK;
+
+        var books: List<Book> = bookRepository.listFavouriteBooks(Integer.parseInt(userID));
+
+        return ResponseEntity(
+                DataResponse(books, status.value()),
+                status
+        );
+    }
+
+    @GetMapping(
             value=["/favourite/search"],
             produces=["application/json"]
     )
     @Throws(Exception::class)
-    suspend fun searchFavouriteBooks(@RequestParam(required = false) query: String?, @RequestHeader userID: String): ResponseEntity<Any> {
+    fun searchFavouriteBooks(@RequestParam(required = false) query: String?, @RequestHeader userID: String): ResponseEntity<Any> {
         var status: HttpStatus = HttpStatus.OK;
 
         var books: List<Book>;
@@ -112,6 +128,23 @@ class BooksController @Autowired constructor (
             else
                 bookRepository.getFavouriteBooksByTitle(Integer.parseInt(userID), formattedQuery);
         }
+
+        return ResponseEntity(
+                DataResponse(books, status.value()),
+                status
+        );
+    }
+
+
+    @GetMapping(
+            value=["/trending/list"],
+            produces=["application/json"]
+    )
+    @Throws(Exception::class)
+    fun listTrendingBooks(): ResponseEntity<Any> {
+        var status: HttpStatus = HttpStatus.OK;
+
+        var books: List<Book> = bookRepository.listTrendingBooks();
 
         return ResponseEntity(
                 DataResponse(books, status.value()),
@@ -178,7 +211,6 @@ class BooksController @Autowired constructor (
 
         var historyBooksInformation: List<BookInformation> = emptyList();
         var booksInformation: List<BookInformation> = emptyList();
-
 
         val retrieveHistoryBooksInformation: Job = CoroutineScope(Dispatchers.Default).launch {
             historyBooksInformation = bookInformationRepository.getHistoryBooksInformationWithLimit(userID=Integer.parseInt(userID));
