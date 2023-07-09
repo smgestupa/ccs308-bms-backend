@@ -20,6 +20,12 @@ interface BookRepository : JpaRepository<Book, Int> {
     fun getBookGenre(@Param("bookID") bookID: Int): List<String>;
 
     @Query(
+            value="SELECT b.book_id, cover, title, author, description, published, b.created_at, b.updated_at FROM book b INNER JOIN favourite_book fb ON (b.book_id = fb.book_id) WHERE fb.user_id = :userID LIMIT 7",
+            nativeQuery=true
+    )
+    fun listFavouriteBooks(@Param("userID") userID: Int): List<Book>;
+
+    @Query(
             value="SELECT b.book_id, cover, title, author, description, published, b.created_at, b.updated_at FROM book b INNER JOIN favourite_book fb ON (b.book_id = fb.book_id) WHERE fb.user_id = :userID",
             nativeQuery=true
     )
@@ -64,6 +70,13 @@ interface BookRepository : JpaRepository<Book, Int> {
             nativeQuery=true
     )
     fun removeFavouriteBook(@Param("userID") userID: Int, @Param("bookID") bookID: Int);
+
+
+    @Query(
+            value="SELECT b.book_id, cover, title, author, description, published, b.created_at, b.updated_at FROM book b INNER JOIN book_metadata bm ON (b.book_id = bm.book_id) ORDER BY bm.views DESC LIMIT 7",
+            nativeQuery=true
+    )
+    fun listTrendingBooks(@Param("userID") userID: Int): List<Book>;
 
     @Modifying
     @Transactional
