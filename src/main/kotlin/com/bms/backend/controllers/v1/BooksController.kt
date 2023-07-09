@@ -66,6 +66,30 @@ class BooksController @Autowired constructor (
         );
     }
     @GetMapping(
+            value=["/favourite/{id}"],
+            produces=["application/json"]
+    )
+    @Throws(Exception::class)
+    fun favouriteBookRecord(@PathVariable id: String, @RequestHeader userID: String): ResponseEntity<Any> {
+        var status: HttpStatus = HttpStatus.OK;
+
+        if (bookRepository.isFavouriteBook(Integer.parseInt(userID), Integer.parseInt(id)) == 1) {
+            bookRepository.removeFavouriteBook(Integer.parseInt(userID), Integer.parseInt(id));
+
+            return ResponseEntity(
+                    MessageResponse("Book has been removed from your favourites", status.value()),
+                    status
+            );
+        }
+
+        bookRepository.addFavouriteBook(Integer.parseInt(userID), Integer.parseInt(id));
+
+        return ResponseEntity(
+                MessageResponse("Book has been added to your favourites", status.value()),
+                status
+        );
+    }
+    @GetMapping(
             value=["/search"],
             produces=["application/json"]
     )
