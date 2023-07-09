@@ -8,11 +8,14 @@ import com.bms.backend.payloads.requests.LoginRequest
 import com.bms.backend.payloads.requests.RegisterRequest
 import com.bms.backend.payloads.response.JwtResponse
 import com.bms.backend.payloads.response.MessageResponse
+import com.bms.backend.repositories.BookRepository
 import com.bms.backend.repositories.RoleRepository
 import com.bms.backend.repositories.UserMetadataRepository
 import com.bms.backend.repositories.UserRepository
 import com.bms.backend.security.jwt.JwtUtils
 import com.bms.backend.security.services.UserDetailsImpl
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -28,12 +31,13 @@ import java.util.stream.Collectors
 @RestController
 @RequestMapping("/api/v1/users")
 class UsersController @Autowired constructor(
-    private val authenticationManager: AuthenticationManager,
-    private val passwordEncoder: PasswordEncoder,
-    private val jwtUtils: JwtUtils,
-    private val userRepository: UserRepository,
-    private val userMetadataRepository: UserMetadataRepository,
-    private val roleRepository: RoleRepository
+        private val authenticationManager: AuthenticationManager,
+        private val passwordEncoder: PasswordEncoder,
+        private val jwtUtils: JwtUtils,
+        private val bookRepository: BookRepository,
+        private val userRepository: UserRepository,
+        private val userMetadataRepository: UserMetadataRepository,
+        private val roleRepository: RoleRepository
 ) {
 
     @PostMapping(
@@ -100,6 +104,8 @@ class UsersController @Autowired constructor(
             );
         }
 
+        val strGenres: Set<String> = registerRequest.genres;
+
         val strRoles: Set<String> = registerRequest.roles;
         val roles: MutableSet<Role> = mutableSetOf();
 
@@ -138,6 +144,48 @@ class UsersController @Autowired constructor(
             registerRequest.username,
             passwordEncoder.encode(registerRequest.password)
         );
+
+        GlobalScope.launch {
+            strGenres.forEach {genre -> run{
+                when (genre) {
+                    "fantasy" -> {
+                        bookRepository.addUserBookHistory(
+                                savedUser.userID,
+                                1,
+                                "view"
+                        );
+                    }
+                    "horror" -> {
+                        bookRepository.addUserBookHistory(
+                                savedUser.userID,
+                                2,
+                                "view"
+                        );
+                    }
+                    "adventure" -> {
+                        bookRepository.addUserBookHistory(
+                                savedUser.userID,
+                                3,
+                                "view"
+                        );
+                    }
+                    "romance" -> {
+                        bookRepository.addUserBookHistory(
+                                savedUser.userID,
+                                4,
+                                "view"
+                        );
+                    }
+                    "mystery" -> {
+                        bookRepository.addUserBookHistory(
+                                savedUser.userID,
+                                5,
+                                "view"
+                        );
+                    }
+                }
+            }};
+        }
 
         userMetadataRepository.save(userMetadata);
         return ResponseEntity(
