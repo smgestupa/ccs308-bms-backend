@@ -6,6 +6,7 @@ import com.bms.backend.models.user.User
 import com.bms.backend.models.user.UserMetadata
 import com.bms.backend.payloads.requests.LoginRequest
 import com.bms.backend.payloads.requests.RegisterRequest
+import com.bms.backend.payloads.requests.UserProfileRequest
 import com.bms.backend.payloads.response.JwtResponse
 import com.bms.backend.payloads.response.MessageResponse
 import com.bms.backend.repositories.BookRepository
@@ -25,6 +26,7 @@ import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.web.bind.annotation.*
+import java.util.*
 import java.util.stream.Collectors
 
 @CrossOrigin(origins=["*"], maxAge=3600)
@@ -192,5 +194,39 @@ class UsersController @Autowired constructor(
             MessageResponse("Successfully registered", status.value()),
             status
         )
+    }
+    @PostMapping(
+        value=["/profile/edit"],
+        consumes=["application/json"],
+        produces=["application/json"]
+    )
+    @ResponseBody
+    @Throws(Exception::class)
+    fun editUserProfile(@RequestBody userProfileRequest: UserProfileRequest): ResponseEntity<Any> {
+        var status: HttpStatus = HttpStatus.OK;
+
+        val optionalUser: Optional<User> = userRepository.findByUserID(Integer.parseInt(userProfileRequest.userID));
+
+        if (optionalUser.isEmpty) {
+            status = HttpStatus.NOT_FOUND;
+
+            return ResponseEntity(
+                    MessageResponse("Could not find user with the given ID", status.value()),
+                    status
+            );
+        }
+
+        val user: User = optionalUser.get();
+
+        user.firstName = userProfileRequest.firstName;
+        user.lastName = userProfileRequest.lastName;
+        user.bio = userProfileRequest.bio;
+
+        userRepository.save(user);
+
+        return ResponseEntity(
+            MessageResponse("Successfully edited profile", status.value()),
+            status
+        );
     }
 }
