@@ -255,6 +255,7 @@ class UsersController @Autowired constructor(
 
         val user: User = optionalUser.get();
 
+        user.photo = Base64.getDecoder().decode(userProfileRequest.photo);
         user.firstName = userProfileRequest.firstName;
         user.lastName = userProfileRequest.lastName;
         user.bio = userProfileRequest.bio;
