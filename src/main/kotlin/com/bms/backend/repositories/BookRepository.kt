@@ -20,10 +20,28 @@ interface BookRepository : JpaRepository<Book, Int> {
     fun getBookGenre(@Param("bookID") bookID: Int): List<String>;
 
     @Query(
-            value="SELECT * FROM favourite_book f JOIN books b USING (book_id) WHERE user_code = :userID",
+            value="SELECT b.book_id, cover, title, author, description, published, b.created_at, b.updated_at FROM book b INNER JOIN favourite_book fb ON (b.book_id = fb.book_id) WHERE fb.user_id = :userID",
             nativeQuery=true
     )
-    fun getFavouriteBooks(@Param("userID") userID: Int): List<Summary>;
+    fun getFavouriteBooks(@Param("userID") userID: Int): List<Book>;
+
+    @Query(
+            value="SELECT b.book_id, cover, title, author, description, published, b.created_at, b.updated_at FROM book b INNER JOIN favourite_book fb ON (b.book_id = fb.book_id) WHERE fb.user_id = :userID AND b.title LIKE %:title%",
+            nativeQuery=true
+    )
+    fun getFavouriteBooksByTitle(@Param("userID") userID: Int, @Param("title") title: String): List<Book>;
+
+    @Query(
+            value="SELECT b.book_id, cover, title, author, description, published, b.created_at, b.updated_at FROM book b INNER JOIN favourite_book fb ON (b.book_id = fb.book_id) INNER JOIN book_metadata bm  ON (b.book_id = bm.book_id) WHERE fb.user_id = :userID AND b.book_id = bm.book_id AND bm.isbn10 = :isbn10",
+            nativeQuery=true
+    )
+    fun getFavouriteBooksByIsbn10(@Param("userID") userID: Int, @Param("isbn10") isbn10: String): List<Book>;
+
+    @Query(
+            value="SELECT b.book_id, cover, title, author, description, published, b.created_at, b.updated_at FROM book b INNER JOIN favourite_book fb ON (b.book_id = fb.book_id) INNER JOIN book_metadata bm  ON (b.book_id = bm.book_id) WHERE fb.user_id = :userID AND b.book_id = bm.book_id AND bm.isbn13 = :isbn13",
+            nativeQuery=true
+    )
+    fun getFavouriteBooksByIsbn13(@Param("userID") userID: Int, @Param("isbn13") isbn13: String): List<Book>;
 
     @Query(
             value="SELECT EXISTS(SELECT * FROM favourite_book WHERE user_id = :userID AND book_id = :bookID)",
