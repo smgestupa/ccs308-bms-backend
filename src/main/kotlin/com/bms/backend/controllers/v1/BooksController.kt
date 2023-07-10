@@ -213,7 +213,7 @@ class BooksController @Autowired constructor (
         var booksInformation: List<BookInformation> = emptyList();
 
         val retrieveHistoryBooksInformation: Job = CoroutineScope(Dispatchers.Default).launch {
-            historyBooksInformation = bookInformationRepository.getHistoryBooksInformationWithLimit(userID=Integer.parseInt(userID));
+            historyBooksInformation = bookInformationRepository.getHistoryBooksInformationWithLimit(userID=Integer.parseInt(userID), 10);
         };
 
         val retrieveBooksInformation: Job = CoroutineScope(Dispatchers.Default).launch {
