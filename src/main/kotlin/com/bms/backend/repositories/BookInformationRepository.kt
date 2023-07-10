@@ -26,7 +26,8 @@ interface BookInformationRepository : JpaRepository<BookInformation, Int> {
                 "INNER JOIN book_genre g\n" +
                 "\tON (uh.book_id = g.book_id)\n" +
                 "WHERE uh.user_id = :userID\n" +
-                "GROUP BY bm.book_id, b.title, bm.cover_type, bm.pages, bm.publisher, bm.publish_date, bm.views, bm.isbn10, bm.isbn13, b.published\n" +
+                "GROUP BY bm.book_id, b.title, bm.cover_type, bm.pages, bm.publisher, bm.publish_date, bm.views, bm.isbn10, bm.isbn13, b.published, uh.created_at\n" +
+                "ORDER BY uh.created_at DESC\n" +
                 "LIMIT :limit",
         nativeQuery=true
     )
