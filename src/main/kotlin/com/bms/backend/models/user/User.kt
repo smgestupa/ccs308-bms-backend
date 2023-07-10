@@ -20,7 +20,7 @@ class User constructor(
     val userID: Int = 0;
 
     @Column
-    val photo: ByteArray?;
+    var photo: ByteArray?;
 
     @Column(
             name="first_name",
