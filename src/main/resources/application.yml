@@ -1,8 +1,0 @@
-server:
-  ssl:
-    key-alias: bms-backend
-    key-store: classpath:bms.jks
-    key-store-type: JKS
-    key-store-password: javaricerice
-
-port: 8080

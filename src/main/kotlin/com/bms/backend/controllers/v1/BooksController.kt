@@ -245,7 +245,7 @@ class BooksController @Autowired constructor (
             SharedInterpreter().use {
                 val gson: Gson = Gson();
 
-                it.runScript("F:/Programming/Python/recommend_books/main.py");
+                it.runScript("/root/bms_utils/recommend_books/main.py");
                 it.set("user", gson.toJsonTree(historyBooksInformation).asJsonArray.toString());
                 it.set("books", gson.toJsonTree(booksInformation).asJsonArray.toString());
 
@@ -288,7 +288,7 @@ class BooksController @Autowired constructor (
 
         runBlocking {
             SharedInterpreter().use {
-                it.runScript("F:/Programming/Python/classify_book_cover/main.py");
+                it.runScript("/root/bms_utils/classify_book_cover/main.py");
                 it.set("img", NDArray(bookCover.bytes));
                 it.exec("coverID = classifyBookCover(img)");
 
@@ -326,7 +326,7 @@ class BooksController @Autowired constructor (
 
         runBlocking {
             SharedInterpreter().use {
-                it.runScript("F:/Programming/Python/extract_isbn_codes/main.py");
+                it.runScript("/root/bms_utils/extract_isbn_codes/main.py");
                 it.set("img", NDArray(uploadedImage.bytes));
                 it.exec("isbnCode = extract_isbn_codes(img)");
 
