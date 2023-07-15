@@ -1,5 +1,6 @@
 package com.bms.backend.models.user
 
+import com.bms.backend.models.book.BookMetadata
 import com.bms.backend.models.role.Role
 import javax.persistence.*
 
@@ -10,62 +11,53 @@ class User constructor(
     firstName: String,
     lastName: String,
     bio: String?,
-    username: String,
-    password: String,
     role: Set<Role>
 ) {
 
     @Id
     @Column(name="user_id")
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy=GenerationType.AUTO)
     val userID: Int = 0;
 
     @Column
-    val photo: ByteArray?;
+    var photo: ByteArray?;
 
     @Column(
             name="first_name",
             length=64,
             nullable=false
     )
-    val firstName: String;
+    var firstName: String;
 
     @Column(
             name="last_name",
             length=64,
             nullable=false
     )
-    val lastName: String;
+    var lastName: String;
 
     @Column(length=64)
-    val bio: String?;
+    var bio: String?;
 
-    @Column(
-            length=32,
-            nullable=false
-    )
-    val username: String;
-
-    @Column(
-            length=64,
-            nullable=false
-    )
-    val password: String;
-
-    @ManyToMany( fetch = FetchType.LAZY )
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             joinColumns = [JoinColumn(name="user_id")],
             inverseJoinColumns = [JoinColumn(name="role_id")]
     )
     var role: Set<Role> = HashSet();
 
+    @OneToOne(
+        cascade = [CascadeType.ALL],
+        fetch = FetchType.LAZY
+    )
+    @JoinColumn(name="user_id")
+    lateinit var userMetadata: UserMetadata;
+
     init {
         this.photo = photo;
         this.firstName = firstName;
         this.lastName = lastName;
         this.bio = bio;
-        this.username = username;
-        this.password = password;
         this.role = role;
     }
 }

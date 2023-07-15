@@ -17,6 +17,6 @@ class Role {
             length=16,
             nullable=false
     )
-    lateinit var label: EnumRole;
+    lateinit var type: EnumRole;
 
 }

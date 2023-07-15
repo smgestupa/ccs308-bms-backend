@@ -1,20 +1,22 @@
 package com.bms.backend.models.book
 
 import com.fasterxml.jackson.annotation.JsonManagedReference
+import org.hibernate.annotations.CreationTimestamp
+import java.time.LocalDateTime
 import javax.persistence.*
 
 @Entity
 @Table
 class Book constructor(
-    cover: ByteArray?,
-    title: String,
-    author: String?,
-    description: String?
+        cover: ByteArray?,
+        title: String,
+        author: String?,
+        description: String?
 ) {
 
     @Id
     @Column(name="book_id")
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy=GenerationType.AUTO)
     val bookID: Int = 0;
 
     @Column
@@ -31,6 +33,24 @@ class Book constructor(
 
     @Column(length=1024)
     val description: String?;
+
+    @Column(nullable=false)
+    var published: Boolean = true;
+
+    @Column(name="created_at")
+    @CreationTimestamp
+    lateinit var createdAt: LocalDateTime;
+
+    @Column(name="updated_at")
+    @CreationTimestamp
+    lateinit var updatedAt: LocalDateTime;
+
+    @OneToOne(
+            cascade = [CascadeType.ALL],
+            fetch = FetchType.LAZY
+    )
+    @JoinColumn(name="book_id")
+    lateinit var bookMetadata: BookMetadata;
 
     init {
         this.cover = cover;
